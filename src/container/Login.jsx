@@ -36,8 +36,16 @@ const Login = () => {
   }
 
   const loginWithGithub = async () => {
-    await signInWithRedirect(firebaseAuth, gitProvider).then((data) => {
-      console.log(data)
+    await signInWithPopup(firebaseAuth, gitProvider).then((data) => {
+      const cred = GithubAuthProvider.credentialFromResult(data);
+      const gitToken = cred.accessToken;
+      dispatch({
+        type: actionType.SET_USER,
+        user: cred.user,
+      });
+      navigate("/", {replace:true})
+    }).catch((er) => {
+      console.log(er);
     })
   }
 
